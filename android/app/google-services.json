@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "334903686980",
+    "project_id": "talentpitchmock",
+    "storage_bucket": "talentpitchmock.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334903686980:android:c6812a6146892586240911",
+        "android_client_info": {
+          "package_name": "com.example.talent_seek"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8fepeE2FF0fbYxkiCPjI0STFYhHnYFpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
