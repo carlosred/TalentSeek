@@ -2,32 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talent_seek/domain/video/video.dart';
+// ignore: library_prefixes
 import 'package:talent_seek/domain/user/user.dart' as talentSeek;
 
 import '../../utils/constants.dart';
 
 class TalentSeekClient {
   final client = FirebaseFirestore.instance;
-
-  Future<List<talentSeek.User>?> getUsers() async {
-    List<talentSeek.User>? result;
-    try {
-      QuerySnapshot querySnapshot = await client.collection("challenges").get();
-
-      final users = querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-
-      for (var element in users) {
-        print(element.toString());
-      }
-      result = users.map((e) => talentSeek.User.fromJson(e)).toList();
-    } catch (e) {
-      result = null;
-    }
-
-    return result;
-  }
 
   Future<List<Video>?> getVideos() async {
     List<Video>? result;
@@ -92,27 +73,86 @@ class TalentSeekClient {
     return result;
   }
 
-  Future<String?> loginWithGoogle() async {
-    const List<String> scopes = <String>[
-      Constants.email,
-    ];
+  Future<talentSeek.User?> _getVideosFromUserLogged(
+      {required talentSeek.User userLogged}) async {
+    talentSeek.User? result;
 
-    GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: scopes,
-    );
-    final googleAccount = googleSignIn.signIn();
+    try {
+      List<Video>? videos = [];
+      List<Video>? challenges = [];
 
-    final googleResponse = await googleAccount;
-    final googleAuth = await googleResponse?.authentication;
+      if (userLogged.videos!.isNotEmpty && userLogged.videos != null) {
+        for (var video in userLogged.videos!) {
+          var videoReference = video as DocumentReference<Object?>;
+          var videoData = await videoReference.get();
+          var videoObject =
+              Video.fromJson(videoData.data() as Map<String, dynamic>);
+          videos.add(videoObject);
+        }
+      }
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      if (userLogged.challenges!.isNotEmpty && userLogged.challenges != null) {
+        for (var challenge in userLogged.challenges!) {
+          var challengeReference = challenge as DocumentReference<Object?>;
+          var challengeData = await challengeReference.get();
+          var challengeObject =
+              Video.fromJson(challengeData.data() as Map<String, dynamic>);
+          challenges.add(challengeObject);
+        }
+      }
 
-    final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+      var userWithVideos =
+          userLogged.copyWith(videos: videos, challenges: challenges);
+      result = userWithVideos;
+    } catch (e) {
+      result = null;
+    }
 
-    return Future.value(userCredential.user?.email ?? '');
+    return result;
+  }
+
+  Future<talentSeek.User?> loginWithGoogle() async {
+    talentSeek.User? result;
+
+    try {
+      const List<String> scopes = <String>[
+        Constants.email,
+      ];
+
+      GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: scopes,
+      );
+      final googleAccount = googleSignIn.signIn();
+
+      final googleResponse = await googleAccount;
+      final googleAuth = await googleResponse?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      var emailUser = userCredential.user?.email;
+
+      var userRef = client.collection("users");
+
+      final userquery =
+          await userRef.where("registeredEmail", isEqualTo: emailUser).get();
+
+      var userJson =
+          userquery.docs.map((doc) => doc.data()).toList().firstOrNull;
+
+      if (userJson != null) {
+        var userLogged = talentSeek.User.fromJson(userJson);
+        result = await _getVideosFromUserLogged(userLogged: userLogged);
+      }
+    } catch (e) {
+      result = null;
+    }
+
+    return result;
   }
 }

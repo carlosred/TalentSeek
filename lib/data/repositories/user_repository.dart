@@ -12,9 +12,7 @@ class UserRepository {
 
   Future<List<User>?> getUsers() async {
     List<User>? videos;
-    try {
-      videos = await talentSeekClient.getUsers();
-    } catch (e) {
+    try {} catch (e) {
       videos = null;
     }
     return videos;
