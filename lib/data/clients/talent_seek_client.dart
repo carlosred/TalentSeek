@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talent_seek/domain/video/video.dart';
 // ignore: library_prefixes
 import 'package:talent_seek/domain/user/user.dart' as talentSeek;
+import 'package:uuid/uuid.dart';
 
 import '../../utils/constants.dart';
 
@@ -148,6 +149,44 @@ class TalentSeekClient {
       if (userJson != null) {
         var userLogged = talentSeek.User.fromJson(userJson);
         result = await _getVideosFromUserLogged(userLogged: userLogged);
+      } else {
+        var nameUser = userCredential.user?.displayName!;
+        var newUser = await _registerWithGoogle(
+            registeredEmail: emailUser!, name: nameUser!);
+        result = await _getVideosFromUserLogged(userLogged: newUser!);
+      }
+    } catch (e) {
+      result = null;
+    }
+
+    return result;
+  }
+
+  Future<talentSeek.User?> _registerWithGoogle(
+      {required String registeredEmail, required String name}) async {
+    talentSeek.User? result;
+
+    try {
+      var userRef = client.collection("users");
+
+      final newUser = <String, dynamic>{
+        'videos': [],
+        'registeredEmail': registeredEmail,
+        'name': name,
+        'challenges': [],
+      };
+
+      var newId = const Uuid().v4();
+      await userRef.doc(newId).set(newUser);
+
+      final userquery = await userRef
+          .where("registeredEmail", isEqualTo: registeredEmail)
+          .get();
+
+      var userJson =
+          userquery.docs.map((doc) => doc.data()).toList().firstOrNull;
+      if (userJson != null) {
+        result = talentSeek.User.fromJson(userJson);
       }
     } catch (e) {
       result = null;
