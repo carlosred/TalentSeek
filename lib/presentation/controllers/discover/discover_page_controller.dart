@@ -3,7 +3,7 @@ import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../domain/video/video.dart';
+import '../../../domain/video/video.dart';
 
 part 'discover_page_controller.g.dart';
 

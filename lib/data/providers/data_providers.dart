@@ -1,6 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 
-import 'package:talent_seek/data/clients/firebase_client.dart';
+import 'package:talent_seek/data/clients/talent_seek_client.dart';
+import 'package:talent_seek/data/repositories/auth_repository.dart';
 import 'package:talent_seek/data/repositories/user_repository.dart';
 import 'package:talent_seek/data/repositories/video_repository.dart';
 
@@ -13,3 +14,9 @@ var videoRepositoryProvider = Provider<VideoRepository>(
 var userRepositoryProvider = Provider<UserRepository>(
   (ref) => UserRepository(talentSeekClient: talentSeekClient),
 );
+
+var authRepositoryProvider = Provider<AuthRepository>(
+  (ref) => AuthRepository(talentSeekClient: talentSeekClient),
+);
+
+var userAuthProvider = StateProvider<String?>((ref) => null);

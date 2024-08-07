@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talent_seek/data/clients/firebase_client.dart';
-import 'package:talent_seek/data/repositories/video_repository.dart';
-import 'package:talent_seek/presentation/discover/discover_page.dart';
+import 'package:talent_seek/presentation/login/login.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -37,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const DiscoverPage(),
+      home: const LoginPage(),
     );
   }
 }

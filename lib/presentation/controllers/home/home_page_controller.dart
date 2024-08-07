@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
 
-import '../../domain/video/video.dart';
+import '../../../domain/video/video.dart';
 
 part 'home_page_controller.g.dart';
 

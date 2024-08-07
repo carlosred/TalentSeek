@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talent_seek/domain/video/video.dart';
-import 'package:talent_seek/domain/user/user.dart';
+import 'package:talent_seek/domain/user/user.dart' as talentSeek;
+
+import '../../utils/constants.dart';
 
 class TalentSeekClient {
   final client = FirebaseFirestore.instance;
 
-  Future<List<User>?> getUsers() async {
-    List<User>? result;
+  Future<List<talentSeek.User>?> getUsers() async {
+    List<talentSeek.User>? result;
     try {
       QuerySnapshot querySnapshot = await client.collection("challenges").get();
 
@@ -17,7 +21,7 @@ class TalentSeekClient {
       for (var element in users) {
         print(element.toString());
       }
-      result = users.map((e) => User.fromJson(e)).toList();
+      result = users.map((e) => talentSeek.User.fromJson(e)).toList();
     } catch (e) {
       result = null;
     }
@@ -61,8 +65,8 @@ class TalentSeekClient {
       for (var video in videos) {
         var videoReference = video.creatorUser as DocumentReference<Object?>;
         var videoObject = await videoReference.get();
-        var creatorUserObject =
-            User.fromJson(videoObject.data() as Map<String, dynamic>);
+        var creatorUserObject = talentSeek.User.fromJson(
+            videoObject.data() as Map<String, dynamic>);
 
         var index = videos.indexOf(video);
         videos[index] = video.copyWith(creatorUser: creatorUserObject);
@@ -76,8 +80,8 @@ class TalentSeekClient {
         var challengeReference =
             challenge.creatorUser as DocumentReference<Object?>;
         var challengeObject = await challengeReference.get();
-        var creatorUserObject =
-            User.fromJson(challengeObject.data() as Map<String, dynamic>);
+        var creatorUserObject = talentSeek.User.fromJson(
+            challengeObject.data() as Map<String, dynamic>);
 
         var index = challenges.indexOf(challenge);
         challenges[index] = challenge.copyWith(creatorUser: creatorUserObject);
@@ -86,5 +90,29 @@ class TalentSeekClient {
     }
     result.shuffle();
     return result;
+  }
+
+  Future<String?> loginWithGoogle() async {
+    const List<String> scopes = <String>[
+      Constants.email,
+    ];
+
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: scopes,
+    );
+    final googleAccount = googleSignIn.signIn();
+
+    final googleResponse = await googleAccount;
+    final googleAuth = await googleResponse?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return Future.value(userCredential.user?.email ?? '');
   }
 }

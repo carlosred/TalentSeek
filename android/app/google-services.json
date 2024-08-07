@@ -12,7 +12,20 @@
           "package_name": "com.example.talent_seek"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "334903686980-pgn5t48ip4sg0vjue6vuosq11e9pfgch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.talent_seek",
+            "certificate_hash": "c9a7daa0bbc1daf71156b17a6cb56d5d22caa197"
+          }
+        },
+        {
+          "client_id": "334903686980-9h9f791muvecdft9v4o00tb85hr0b12a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB8fepeE2FF0fbYxkiCPjI0STFYhHnYFpw"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334903686980-9h9f791muvecdft9v4o00tb85hr0b12a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "334903686980-me8gv9ka7kps8dj06mmb3mul04gm4ilu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.talentSeek"
+              }
+            }
+          ]
         }
       }
     }

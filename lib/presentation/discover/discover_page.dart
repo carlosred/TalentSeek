@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
-import 'package:talent_seek/presentation/controllers/discover_page_controller.dart';
+import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/video_reel.dart';
 

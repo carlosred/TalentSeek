@@ -7,7 +7,7 @@ part of 'discover_page_controller.dart';
 // **************************************************************************
 
 String _$discoverPageControllerHash() =>
-    r'f68cc04d686c20e109c8fa91ccc34572bafa6255';
+    r'9af9dd7db9419da97226445eb5db0cb8c5b77a8f';
 
 /// See also [DiscoverPageController].
 @ProviderFor(DiscoverPageController)
