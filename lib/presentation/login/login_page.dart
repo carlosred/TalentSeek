@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/presentation/discover/discover_page.dart';
+import 'package:talent_seek/presentation/home/home_page.dart';
+import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/utils/styles.dart';
 
 import '../../utils/constants.dart';
@@ -18,10 +20,11 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
+    ref.read(cameraControllerProvider).initializeCameras();
     ref.listenManual(loginPageControllerProvider, (previous, next) {
       if (next.hasValue && next.value != null) {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const DiscoverPage(),
+          builder: (context) => const HomePage(),
         ));
       }
     });

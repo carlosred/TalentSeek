@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talent_seek/presentation/login/login.dart';
+import 'package:talent_seek/presentation/login/login_page.dart';
 import 'firebase_options.dart';
 import 'presentation/account/account_page.dart';
+import 'presentation/home/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AccountPage(),
+      home: const LoginPage(),
     );
   }
 }

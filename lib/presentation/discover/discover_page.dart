@@ -11,7 +11,11 @@ class DiscoverPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DiscoverPageState();
 }
 
-class _DiscoverPageState extends ConsumerState<DiscoverPage> {
+class _DiscoverPageState extends ConsumerState<DiscoverPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -23,13 +27,10 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var discoverPageController = ref.watch(discoverPageControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Discover Page'),
-      ),
       body: SizedBox.expand(
         child: discoverPageController.when(
           data: (data) {
