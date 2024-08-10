@@ -248,13 +248,16 @@ class TalentSeekClient {
       {required Video videoObjectWithoutUrl, required String videoUrl}) async {
     Video? result;
     CollectionReference videoRefs;
+
+    var collection = '';
     if (videoObjectWithoutUrl.roleSeeked != null &&
         videoObjectWithoutUrl.roleSeeked!.isNotEmpty) {
-      videoRefs = client.collection("challenges");
+      collection = 'challenges';
     } else {
-      videoRefs = client.collection("videos");
+      collection = 'videos';
     }
 
+    videoRefs = client.collection(collection);
     try {
       final newVideo =
           videoObjectWithoutUrl.copyWith(videoUrl: videoUrl).toJson();

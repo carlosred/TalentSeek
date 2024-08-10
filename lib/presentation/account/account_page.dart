@@ -168,8 +168,12 @@ class _AccountPageState extends ConsumerState<AccountPage>
                     Expanded(
                       child: TabBarView(
                         children: [
-                          buildGridView(userLogged!.videos),
-                          buildGridView(userLogged.challenges),
+                          buildGridView(
+                            videos: userLogged!.videos,
+                          ),
+                          buildGridView(
+                            videos: userLogged.challenges,
+                          ),
                         ],
                       ),
                     ),
@@ -183,7 +187,7 @@ class _AccountPageState extends ConsumerState<AccountPage>
     );
   }
 
-  Widget buildGridView(List<dynamic>? videos) {
+  Widget buildGridView({required List<dynamic>? videos}) {
     if (videos!.isEmpty) {
       return Center(
         child: Column(
@@ -211,7 +215,7 @@ class _AccountPageState extends ConsumerState<AccountPage>
       int crossAxisCount = 2; // Always show 2 items per row
       double aspectRatio = 16 / 9;
       // Calculate the number of rows required
-      int rowCount = (videos!.length / crossAxisCount).ceil();
+      int rowCount = (videos.length / crossAxisCount).ceil();
 
       // Calculate the height of each item
       double itemHeight =
@@ -236,8 +240,10 @@ class _AccountPageState extends ConsumerState<AccountPage>
             return Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage('https://via.placeholder.com/150'),
-                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    'https://img.freepik.com/free-vector/flat-clapperboard-icon_1063-38.jpg',
+                  ),
+                  fit: BoxFit.contain,
                 ),
               ),
             );
