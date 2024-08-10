@@ -1,7 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:io';
+
 import 'package:talent_seek/data/clients/talent_seek_client.dart';
-import 'package:talent_seek/domain/user/user.dart';
-import 'package:talent_seek/domain/video/video.dart';
+
+import '../../domain/video/video.dart';
 
 class UserRepository {
   final TalentSeekClient talentSeekClient;
@@ -10,11 +11,28 @@ class UserRepository {
     required this.talentSeekClient,
   });
 
-  Future<List<User>?> getUsers() async {
-    List<User>? videos;
-    try {} catch (e) {
-      videos = null;
+  Future<String?> uploadVideo({required File videoFile}) async {
+    String? videoUploadedUrl;
+    try {
+      videoUploadedUrl =
+          await talentSeekClient.uploadVideo(videoFile: videoFile);
+    } catch (e) {
+      videoUploadedUrl = null;
     }
-    return videos;
+    return videoUploadedUrl;
+  }
+
+  Future<Video?> createVideoDocument(
+      {required Video videoObjectWithoutUrl, required String videoUrl}) async {
+    Video? videoCreated;
+    try {
+      videoCreated = await talentSeekClient.createVideoDocument(
+        videoUrl: videoUrl,
+        videoObjectWithoutUrl: videoObjectWithoutUrl,
+      );
+    } catch (e) {
+      videoCreated = null;
+    }
+    return videoCreated;
   }
 }

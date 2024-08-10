@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/video_reel.dart';
@@ -11,11 +10,7 @@ class DiscoverPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DiscoverPageState();
 }
 
-class _DiscoverPageState extends ConsumerState<DiscoverPage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
+class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -27,7 +22,6 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var discoverPageController = ref.watch(discoverPageControllerProvider);
 
     return Scaffold(
@@ -39,6 +33,11 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage>
               return PageView.builder(
                 onPageChanged: (value) {
                   ref.read(currentVideoIndex.notifier).state = value;
+                  if (value >= 1 && value < data.length - 1) {
+                    if (data[value + 1].value.isInitialized == false) {
+                      data[value + 1].initialize();
+                    }
+                  }
                 },
                 itemCount: data.length,
                 scrollDirection: Axis.vertical,

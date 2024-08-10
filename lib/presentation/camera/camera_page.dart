@@ -67,14 +67,37 @@ class _CameraPageState extends ConsumerState<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(children: [
-          if (videoRecorded == null) ...[
-            CameraPreview(controller),
+
+    final double previewAspectRatio = 0.7;
+
+    return Scaffold(
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: AspectRatio(
+                aspectRatio: 1 / previewAspectRatio,
+                child: ClipRect(
+                  child: Transform.scale(
+                    scale: controller.value.aspectRatio / previewAspectRatio,
+                    child: Center(
+                      child: CameraPreview(controller),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 bottom: 50.0,
@@ -85,10 +108,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
               ),
             )
           ],
-          if (videoRecorded != null && _videoPlayerController != null) ...[
-            VideoPlayer(_videoPlayerController!),
-          ]
-        ]),
+        ),
       ),
     );
   }

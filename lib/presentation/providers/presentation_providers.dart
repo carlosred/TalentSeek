@@ -16,3 +16,5 @@ var cameraControllerProvider = StateProvider<CameraTalentSeekController>(
 );
 
 var recordedVideoProvider = StateProvider<File?>((ref) => null);
+
+var videoObjectProvider = StateProvider<Video?>((ref) => null);

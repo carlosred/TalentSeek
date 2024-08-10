@@ -28,7 +28,7 @@ class VideoReelWidget extends ConsumerStatefulWidget {
 }
 
 class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with SingleTickerProviderStateMixin {
   int videoPosition = 0;
   var _progress = 0.0;
   int totalVideoDurationInSeconds = 0;
@@ -162,7 +162,6 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     Size size = MediaQuery.of(context).size;
     ref.listen(currentVideoIndex, (previous, next) {
       _checkControllers(currentIndex: next);
@@ -173,16 +172,17 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
         height: size.height,
         child: Stack(children: [
           GestureDetector(
-              onTap: () {
-                if (widget.videoPlayerController.value.isPlaying) {
-                  widget.videoPlayerController.pause();
-                  _controller.stop();
-                } else {
-                  widget.videoPlayerController.play();
-                  _controller.forward();
-                }
-              },
-              child: VideoPlayer(widget.videoPlayerController)),
+            onTap: () {
+              if (widget.videoPlayerController.value.isPlaying) {
+                widget.videoPlayerController.pause();
+                _controller.stop();
+              } else {
+                widget.videoPlayerController.play();
+                _controller.forward();
+              }
+            },
+            child: VideoPlayer(widget.videoPlayerController),
+          ),
           Positioned(
             bottom: 20.0,
             left: 5.0,
@@ -237,8 +237,8 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
               videoInfo: widget.video,
             ),
           ),
-          if (widget.video?.objectChallenge != null &&
-              widget.video?.roleSeeked != null)
+          if (widget.video?.roleSeeked != null &&
+              widget.video!.roleSeeked!.isNotEmpty)
             ChallengeItem(
               roleSeeked: widget.video!.roleSeeked!,
             ),
@@ -246,7 +246,4 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

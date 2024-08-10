@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talent_seek/domain/video/video.dart';
 // ignore: library_prefixes
 import 'package:talent_seek/domain/user/user.dart' as talentSeek;
 import 'package:uuid/uuid.dart';
-
 import '../../utils/constants.dart';
 
 class TalentSeekClient {
@@ -193,5 +196,85 @@ class TalentSeekClient {
     }
 
     return result;
+  }
+
+  Future<DocumentReference?> getIdUserLogged(
+      {required String registeredEmail}) async {
+    var userRef = client.collection("users");
+    final userquery = await userRef
+        .where("registeredEmail", isEqualTo: registeredEmail)
+        .get();
+
+    var userDocument = userquery.docs.firstOrNull;
+
+    return userDocument!.reference;
+  }
+
+  Future<String?> uploadVideo({required File videoFile}) async {
+    String? videoUrl;
+    final storageRef = FirebaseStorage.instance.ref();
+    var newIdVideo = const Uuid().v4();
+    final videosRef = storageRef.child("videos/$newIdVideo.mp4");
+
+    try {
+      await videosRef.putFile(videoFile);
+      videoUrl = await videosRef.getDownloadURL();
+    } on FirebaseException catch (e) {
+      debugPrint('The task of uploading the video fails ->$e');
+      videoUrl = null;
+    }
+    return videoUrl;
+  }
+
+  Future<Video?> createVideoDocument(
+      {required Video videoObjectWithoutUrl, required String videoUrl}) async {
+    Video? result;
+    CollectionReference videoRefs;
+    if (videoObjectWithoutUrl.roleSeeked != null &&
+        videoObjectWithoutUrl.roleSeeked!.isNotEmpty) {
+      videoRefs = client.collection("challenges");
+    } else {
+      videoRefs = client.collection("videos");
+    }
+
+    try {
+      final newVideo =
+          videoObjectWithoutUrl.copyWith(videoUrl: videoUrl).toJson();
+
+      var newId = const Uuid().v4();
+      await videoRefs.doc(newId).set(newVideo);
+
+      final videoDocument = await videoRefs.doc(newId).get();
+      var videoJson = videoDocument.data() as Map<String, dynamic>;
+      if (videoJson.isNotEmpty) {
+        result = Video.fromJson(videoJson);
+        await _updateVideoListOfUserLogged(
+          newVideoId: newId,
+          videoCreated: result,
+          videoRefs: videoRefs,
+        );
+      }
+    } catch (e) {
+      result = null;
+    }
+
+    return result;
+  }
+
+  Future<void> _updateVideoListOfUserLogged(
+      {required String newVideoId,
+      required Video videoCreated,
+      required CollectionReference<Object?> videoRefs}) async {
+    var userRef = client.collection("users");
+    var videoReference = videoCreated.creatorUser as DocumentReference<Object?>;
+    var userCreator = await videoReference.get();
+    final videoDocumentReference = videoRefs.doc(newVideoId);
+    var userCreatorId = userCreator.id;
+    var newVideosList =
+        talentSeek.User.fromJson(userCreator.data() as Map<String, dynamic>)
+            .videos;
+    newVideosList!.add(videoDocumentReference);
+
+    await userRef.doc(userCreatorId).update({'videos': newVideosList});
   }
 }
