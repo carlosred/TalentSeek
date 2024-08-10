@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:talent_seek/presentation/camera/camera_page.dart';
 

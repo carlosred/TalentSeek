@@ -155,6 +155,7 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
   void dispose() {
     widget.videoPlayerController.pause();
     widget.videoPlayerController.seekTo(Duration.zero);
+    widget.videoPlayerController.dispose();
     _controller.reset();
     _controller.dispose();
     super.dispose();
@@ -181,7 +182,16 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
                 _controller.forward();
               }
             },
-            child: VideoPlayer(widget.videoPlayerController),
+            child: SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: SizedBox(
+                  width: (widget.videoPlayerController.value.size.width),
+                  height: widget.videoPlayerController.value.size.height,
+                  child: VideoPlayer(widget.videoPlayerController),
+                ),
+              ),
+            ),
           ),
           Positioned(
             bottom: 20.0,

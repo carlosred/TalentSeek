@@ -1,8 +1,10 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:talent_seek/presentation/controllers/account/account_page_controller.dart';
 
 import 'package:talent_seek/presentation/controllers/camera/video_playback_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
@@ -14,33 +16,38 @@ import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 
 class VideoPlayBackPage extends ConsumerStatefulWidget {
-  const VideoPlayBackPage({super.key});
-
+  const VideoPlayBackPage({
+    super.key,
+    required this.videoController,
+    required this.aspectRatio,
+  });
+  final VideoPlayerController videoController;
+  final double aspectRatio;
   @override
   ConsumerState<VideoPlayBackPage> createState() => _VideoPlayBackPageState();
 }
 
 class _VideoPlayBackPageState extends ConsumerState<VideoPlayBackPage> {
-  late VideoPlayerController _videoController;
-  late CameraController controller;
   @override
   void initState() {
-    var videoRecorded = ref.read(recordedVideoProvider);
-    _videoController = VideoPlayerController.file(videoRecorded!);
-    initializeVideo();
+    widget.videoController.play();
+    ref.listenManual(videoPlayBackPageControllerProvider,
+        (previous, next) async {
+      if (next.hasValue && next.value != null) {
+        ref.read(accountPageControllerProvider.notifier).getUserUpdated();
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        // Navigator.of(context).popUntil((route) => false);
+      }
+    });
     super.initState();
-  }
-
-  void initializeVideo() async {
-    controller = ref.read(cameraControllerProvider).getCameraController;
-    await _videoController.initialize();
-    _videoController.setLooping(true);
-    _videoController.play();
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
+    widget.videoController.dispose();
     super.dispose();
   }
 
@@ -58,30 +65,29 @@ class _VideoPlayBackPageState extends ConsumerState<VideoPlayBackPage> {
           width: width,
           child: Stack(
             children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                child: AspectRatio(
-                  aspectRatio: 1 / previewAspectRatio,
-                  child: ClipRect(
-                    child: Transform.scale(
-                      scale: controller.value.aspectRatio / previewAspectRatio,
-                      child: Center(
-                        child: VideoPlayer(_videoController),
-                      ),
-                    ),
+              SizedBox.expand(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: (widget.videoController.value.size.width * 1.20),
+                    height: widget.videoController.value.size.height,
+                    child: VideoPlayer(widget.videoController),
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 50.0, right: 25.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0, right: 25.0),
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: FaIcon(
-                    FontAwesomeIcons.x,
-                    color: Styles.backgroundColor,
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.read(recordedVideoProvider.notifier).state = null;
+                      Navigator.pop(context);
+                    },
+                    child: const FaIcon(
+                      FontAwesomeIcons.x,
+                      color: Styles.backgroundColor,
+                    ),
                   ),
                 ),
               ),

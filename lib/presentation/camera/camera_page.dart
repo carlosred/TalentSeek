@@ -21,6 +21,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
   late CameraController controller;
   late VideoPlayerController? _videoPlayerController;
   File? videoRecorded;
+  var _aspectRatio;
   @override
   void initState() {
     ref.listenManual(recordedVideoProvider, (previous, next) async {
@@ -31,8 +32,11 @@ class _CameraPageState extends ConsumerState<CameraPage> {
           _videoPlayerController!.play();
           _videoPlayerController!.setLooping(true);
 
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const VideoPlayBackPage(),
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => VideoPlayBackPage(
+              videoController: _videoPlayerController!,
+              aspectRatio: _aspectRatio,
+            ),
           ));
         });
       }
@@ -73,8 +77,9 @@ class _CameraPageState extends ConsumerState<CameraPage> {
       return Container();
     }
 
-    final double previewAspectRatio = 0.7;
+    const double previewAspectRatio = 0.7;
 
+    _aspectRatio = controller.value.aspectRatio / previewAspectRatio;
     return Scaffold(
       body: SizedBox(
         height: height,
@@ -90,7 +95,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                 aspectRatio: 1 / previewAspectRatio,
                 child: ClipRect(
                   child: Transform.scale(
-                    scale: controller.value.aspectRatio / previewAspectRatio,
+                    scale: _aspectRatio,
                     child: Center(
                       child: CameraPreview(controller),
                     ),
@@ -98,8 +103,8 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
+            const Padding(
+              padding: EdgeInsets.only(
                 bottom: 50.0,
               ),
               child: Align(

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,8 @@ import '../../utils/styles.dart';
 import '../providers/presentation_providers.dart';
 
 class RecordingButton extends ConsumerStatefulWidget {
+  const RecordingButton({super.key});
+
   @override
   _RecordingButtonState createState() => _RecordingButtonState();
 }

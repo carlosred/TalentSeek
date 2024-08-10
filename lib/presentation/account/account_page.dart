@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:talent_seek/presentation/widgets/create_pitch_dialog.dart';
+import 'package:talent_seek/presentation/widgets/update_name_user_dialog.dart';
 import 'package:talent_seek/utils/styles.dart';
 
 import '../widgets/circular_account_avatar.dart';
@@ -97,11 +99,23 @@ class _AccountPageState extends ConsumerState<AccountPage>
                               ),
                               borderRadius: BorderRadius.circular(4.0),
                             ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.edit,
-                                size: 25,
-                                color: Colors.black,
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => UpdateNameUserDialog(
+                                      userName: userLogged!.name!,
+                                    ),
+                                    useSafeArea: true,
+                                    useRootNavigator: true,
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.edit,
+                                  size: 25,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),

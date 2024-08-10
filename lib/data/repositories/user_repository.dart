@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/data/clients/talent_seek_client.dart';
+import 'package:talent_seek/domain/user/user.dart';
 
 import '../../domain/video/video.dart';
 
@@ -11,28 +13,23 @@ class UserRepository {
     required this.talentSeekClient,
   });
 
-  Future<String?> uploadVideo({required File videoFile}) async {
-    String? videoUploadedUrl;
+  Future<User?> getUserUpdated() async {
+    User? userUpdated;
     try {
-      videoUploadedUrl =
-          await talentSeekClient.uploadVideo(videoFile: videoFile);
+      userUpdated = await talentSeekClient.getUserLogged();
     } catch (e) {
-      videoUploadedUrl = null;
+      userUpdated = null;
     }
-    return videoUploadedUrl;
+    return userUpdated;
   }
 
-  Future<Video?> createVideoDocument(
-      {required Video videoObjectWithoutUrl, required String videoUrl}) async {
-    Video? videoCreated;
+  Future<User?> updateUser({required String newName}) async {
+    User? userUpdated;
     try {
-      videoCreated = await talentSeekClient.createVideoDocument(
-        videoUrl: videoUrl,
-        videoObjectWithoutUrl: videoObjectWithoutUrl,
-      );
+      userUpdated = await talentSeekClient.updateUser(newName: newName);
     } catch (e) {
-      videoCreated = null;
+      userUpdated = null;
     }
-    return videoCreated;
+    return userUpdated;
   }
 }

@@ -210,6 +210,24 @@ class TalentSeekClient {
     return userDocument!.reference;
   }
 
+  Future<talentSeek.User?> getUserLogged() async {
+    talentSeek.User? result;
+    var registeredEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+    try {
+      var userRef = client.collection("users");
+      final userquery = await userRef
+          .where("registeredEmail", isEqualTo: registeredEmail)
+          .get();
+
+      var userDocument = userquery.docs.firstOrNull;
+
+      result = talentSeek.User.fromJson(userDocument!.data());
+    } catch (e) {
+      result = null;
+    }
+    return result;
+  }
+
   Future<String?> uploadVideo({required File videoFile}) async {
     String? videoUrl;
     final storageRef = FirebaseStorage.instance.ref();
@@ -276,5 +294,25 @@ class TalentSeekClient {
     newVideosList!.add(videoDocumentReference);
 
     await userRef.doc(userCreatorId).update({'videos': newVideosList});
+  }
+
+  Future<talentSeek.User?> updateUser({
+    required String newName,
+  }) async {
+    var userRef = client.collection("users");
+
+    var registeredEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+
+    final userquery = await userRef
+        .where("registeredEmail", isEqualTo: registeredEmail)
+        .get();
+
+    var userDocument = userquery.docs.firstOrNull;
+
+    var userId = userDocument!.id;
+
+    await userRef.doc(userId).update({'name': newName});
+
+    return getUserLogged();
   }
 }
