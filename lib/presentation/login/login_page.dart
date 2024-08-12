@@ -9,6 +9,7 @@ import '../../utils/constants.dart';
 import '../../utils/enum.dart';
 import '../controllers/login/login_page_controller.dart';
 import '../widgets/login_button.dart';
+import 'package:animate_do/animate_do.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -47,10 +48,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'TalentSeek',
-                  style: Styles.textStyleTittle,
-                  textAlign: TextAlign.center,
+                SlideInLeft(
+                  duration: Durations.long4,
+                  child: const Text(
+                    'TalentSeek',
+                    style: Styles.textStyleTittle,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 loginPageController.when(
@@ -66,14 +70,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                       );
                     } else {
-                      return LoginButton(
-                        ref: ref,
-                        status: LoginStatus.login,
-                        onPressed: () async {
-                          await ref
-                              .read(loginPageControllerProvider.notifier)
-                              .loginWithGoogle();
-                        },
+                      return SlideInRight(
+                        duration: Durations.long4,
+                        child: LoginButton(
+                          ref: ref,
+                          status: LoginStatus.login,
+                          onPressed: () async {
+                            await ref
+                                .read(loginPageControllerProvider.notifier)
+                                .loginWithGoogle();
+                          },
+                        ),
                       );
                     }
                   },
