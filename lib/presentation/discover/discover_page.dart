@@ -34,8 +34,8 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                 onPageChanged: (value) {
                   ref.read(currentVideoIndex.notifier).state = value;
                   if (value >= 1 && value < data.length - 1) {
-                    if (data[value + 1].value.isInitialized == false) {
-                      data[value + 1].initialize();
+                    if (data[value + 1]!.value.isInitialized == false) {
+                      data[value + 1]!.initialize();
                     }
                   }
                 },
@@ -44,7 +44,7 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                 itemBuilder: (context, index) => VideoReelWidget(
                   index: index,
                   video: videoList?[index],
-                  videoPlayerController: data[index],
+                  videoPlayerController: data[index] ?? null,
                 ),
               );
             } else {

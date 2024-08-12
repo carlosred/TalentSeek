@@ -7,7 +7,7 @@ part of 'account_page_controller.dart';
 // **************************************************************************
 
 String _$accountPageControllerHash() =>
-    r'6ec3b57a5809ae09f6e999a13a298488916b9335';
+    r'd4bc2a9fc354614d348584bbed93619fef781d67';
 
 /// See also [AccountPageController].
 @ProviderFor(AccountPageController)

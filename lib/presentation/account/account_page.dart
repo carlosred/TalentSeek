@@ -9,6 +9,7 @@ import 'package:talent_seek/presentation/widgets/create_pitch_dialog.dart';
 import 'package:talent_seek/presentation/widgets/update_name_user_dialog.dart';
 import 'package:talent_seek/utils/styles.dart';
 
+import '../widgets/add_pitch_button.dart';
 import '../widgets/circular_account_avatar.dart';
 
 class AccountPage extends ConsumerStatefulWidget {
@@ -187,7 +188,7 @@ class _AccountPageState extends ConsumerState<AccountPage>
     );
   }
 
-  Widget buildGridView({required List<dynamic>? videos}) {
+  Widget buildGridView({required List<dynamic>? videos, isChallenge}) {
     if (videos!.isEmpty) {
       return Center(
         child: Column(
@@ -237,13 +238,18 @@ class _AccountPageState extends ConsumerState<AccountPage>
           ),
           itemCount: videos.length,
           itemBuilder: (context, index) {
-            return Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    'https://img.freepik.com/free-vector/flat-clapperboard-icon_1063-38.jpg',
+            return GestureDetector(
+              onTap: () {
+                // Navigator.of(context).push(route)
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      'https://img.freepik.com/free-vector/flat-clapperboard-icon_1063-38.jpg',
+                    ),
+                    fit: BoxFit.contain,
                   ),
-                  fit: BoxFit.contain,
                 ),
               ),
             );
@@ -251,51 +257,5 @@ class _AccountPageState extends ConsumerState<AccountPage>
         ),
       );
     }
-  }
-}
-
-class AddPitchButton extends StatelessWidget {
-  const AddPitchButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => const CreatePitchDialog(),
-          useSafeArea: true,
-          useRootNavigator: true,
-        );
-      },
-      splashColor: Colors.white,
-      child: Container(
-        height: 50,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Styles.backgroundColor, // You can customize the color
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add_box_rounded,
-              color: Colors.white,
-            ),
-            SizedBox(width: 8),
-            Text(
-              'Crea un Pitch',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

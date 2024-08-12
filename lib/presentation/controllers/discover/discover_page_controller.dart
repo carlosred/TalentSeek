@@ -9,9 +9,9 @@ part 'discover_page_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 class DiscoverPageController extends _$DiscoverPageController {
-  late List<VideoPlayerController>? _videoControllers;
+  late List<VideoPlayerController?>? _videoControllers;
   @override
-  Future<List<VideoPlayerController>?> build() async {
+  Future<List<VideoPlayerController?>?> build() async {
     return null;
   }
 
@@ -38,16 +38,21 @@ class DiscoverPageController extends _$DiscoverPageController {
 
   Future<void> initializeCurrentVideoController(
       {required int currentIndexVideoController}) async {
-    await _videoControllers![currentIndexVideoController]
+    await _videoControllers![currentIndexVideoController]!
         .initialize()
         .then((value) {
       if (currentIndexVideoController != _videoControllers!.length - 1) {
-        _videoControllers![currentIndexVideoController + 1]
+        _videoControllers![currentIndexVideoController + 1]!
             .initialize()
             .then((value) {});
       }
     });
   }
 
-  Future<void> getUsersCreatorFromVideos() async {}
+  deleteVideoControllerDisposed({required int index}) {
+    var currentVideoControllerList = _videoControllers;
+    currentVideoControllerList![index] = null;
+
+    state = AsyncData(currentVideoControllerList);
+  }
 }
