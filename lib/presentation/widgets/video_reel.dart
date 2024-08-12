@@ -228,98 +228,109 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
               .deleteVideoControllerDisposed(index: previous!);
     });
     return (_videoPlayerController.value.isInitialized)
-        ? Scaffold(
-            body: SizedBox(
-              width: size.width,
-              height: size.height,
-              child: Stack(children: [
-                GestureDetector(
-                  onTap: () {
-                    if (_videoPlayerController.value.isPlaying) {
-                      _videoPlayerController.pause();
-                      _controller!.stop();
-                    } else {
-                      _videoPlayerController.play();
-                      _controller!.forward();
-                    }
-                  },
-                  child: SizedBox.expand(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: SizedBox(
-                        width: (_videoPlayerController.value.size.width),
-                        height: _videoPlayerController.value.size.height,
-                        child: VideoPlayer(_videoPlayerController),
+        ? VisibilityDetector(
+            key: const Key('video-reel-key'),
+            onVisibilityChanged: (info) {
+              var visiblePercentage = info.visibleFraction * 100;
+
+              if (visiblePercentage == 0.0) {
+                _controller!.reset();
+                _videoPlayerController.pause();
+              }
+            },
+            child: Scaffold(
+              body: SizedBox(
+                width: size.width,
+                height: size.height,
+                child: Stack(children: [
+                  GestureDetector(
+                    onTap: () {
+                      if (_videoPlayerController.value.isPlaying) {
+                        _videoPlayerController.pause();
+                        _controller!.stop();
+                      } else {
+                        _videoPlayerController.play();
+                        _controller!.forward();
+                      }
+                    },
+                    child: SizedBox.expand(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: SizedBox(
+                          width: (_videoPlayerController.value.size.width),
+                          height: _videoPlayerController.value.size.height,
+                          child: VideoPlayer(_videoPlayerController),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 20.0,
-                  left: 5.0,
-                  right: 5.0,
-                  child: SizedBox(
-                    height: 20,
-                    width: size.width,
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTapDown: (details) {
-                            _updatePositionOfVideo(
-                                details: details, size: size);
-                          },
-                          child: FractionallySizedBox(
-                            widthFactor: 1.0,
-                            child: Container(
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffD9D9D9),
-                                borderRadius: BorderRadius.circular(4.0),
+                  Positioned(
+                    bottom: 20.0,
+                    left: 5.0,
+                    right: 5.0,
+                    child: SizedBox(
+                      height: 20,
+                      width: size.width,
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTapDown: (details) {
+                              _updatePositionOfVideo(
+                                  details: details, size: size);
+                            },
+                            child: FractionallySizedBox(
+                              widthFactor: 1.0,
+                              child: Container(
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffD9D9D9),
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onPanUpdate: (details) {
-                            _updatePositionOfVideo(
-                                details: details, size: size);
-                          },
-                          onTapDown: (details) {
-                            _updatePositionOfVideo(
-                                details: details, size: size);
-                          },
-                          child: FractionallySizedBox(
-                            widthFactor: _progress,
-                            child: Container(
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: Styles.backgroundColor,
-                                borderRadius: BorderRadius.circular(4.0),
+                          GestureDetector(
+                            onPanUpdate: (details) {
+                              _updatePositionOfVideo(
+                                  details: details, size: size);
+                            },
+                            onTapDown: (details) {
+                              _updatePositionOfVideo(
+                                  details: details, size: size);
+                            },
+                            child: FractionallySizedBox(
+                              widthFactor: _progress,
+                              child: Container(
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: Styles.backgroundColor,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 50.0,
-                  left: 5.0,
-                  right: 5.0,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ExpandableVideoInfo(
-                      videoInfo: widget.video,
+                  Positioned(
+                    bottom: 50.0,
+                    left: 5.0,
+                    right: 5.0,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ExpandableVideoInfo(
+                        videoInfo: widget.video,
+                      ),
                     ),
                   ),
-                ),
-                if (widget.video?.roleSeeked != null &&
-                    widget.video!.roleSeeked!.isNotEmpty)
-                  ChallengeItem(
-                    roleSeeked: widget.video!.roleSeeked!,
-                  ),
-              ]),
+                  if (widget.video?.roleSeeked != null &&
+                      widget.video!.roleSeeked!.isNotEmpty)
+                    ChallengeItem(
+                      roleSeeked: widget.video!.roleSeeked!,
+                    ),
+                ]),
+              ),
             ),
           )
         : _videoShimmer();

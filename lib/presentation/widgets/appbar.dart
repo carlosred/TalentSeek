@@ -17,18 +17,18 @@ class TalentSeekAppBar extends ConsumerWidget {
     return Container(
       decoration: Styles.backgroundGradient,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () {
-              ref.read(userAuthProvider.notifier).state = null;
-              ref.read(loginPageControllerProvider.notifier).logout();
-              Navigator.of(context).pop();
-            },
-            child: const Padding(
-              padding: EdgeInsets.only(top: 10.0, left: 20.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: () {
+                ref.read(userAuthProvider.notifier).state = null;
+                ref.read(loginPageControllerProvider.notifier).logout();
+                Navigator.of(context).pop();
+              },
+              child: const Padding(
+                padding: EdgeInsets.only(left: 20.0),
                 child: FaIcon(
                   FontAwesomeIcons.arrowRightFromBracket,
                   color: Colors.white,
@@ -44,6 +44,7 @@ class TalentSeekAppBar extends ConsumerWidget {
               fit: BoxFit.contain,
             ),
           ),
+          SizedBox()
         ],
       ),
     );

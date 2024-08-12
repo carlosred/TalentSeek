@@ -27,35 +27,37 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     var tabIndex = ref.watch(tabIndexProvider);
 
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: TalentSeekAppBar(),
-        ),
-        body: SizedBox(
-          height: height,
-          width: width,
-          child: IndexedStack(
-            index: tabIndex,
-            children: const [DiscoverPage(), AccountPage()],
+    return SafeArea(
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: Colors.grey[200],
+          appBar: const PreferredSize(
+            preferredSize: Size.fromHeight(50),
+            child: TalentSeekAppBar(),
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.compass),
-              label: 'Descubre',
+          body: SizedBox(
+            height: height,
+            width: width,
+            child: IndexedStack(
+              index: tabIndex,
+              children: const [DiscoverPage(), AccountPage()],
             ),
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.userAstronaut),
-              label: 'Portafolio',
-            ),
-          ],
-          currentIndex: tabIndex,
-          onTap: _onItemTapped,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: FaIcon(FontAwesomeIcons.compass),
+                label: 'Descubre',
+              ),
+              BottomNavigationBarItem(
+                icon: FaIcon(FontAwesomeIcons.userAstronaut),
+                label: 'Portafolio',
+              ),
+            ],
+            currentIndex: tabIndex,
+            onTap: _onItemTapped,
+          ),
         ),
       ),
     );
