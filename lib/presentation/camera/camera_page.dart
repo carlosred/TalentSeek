@@ -34,12 +34,14 @@ class _CameraPageState extends ConsumerState<CameraPage> {
           _videoPlayerController!.play();
           _videoPlayerController!.setLooping(true);
 
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => VideoPlayBackPage(
-              videoController: _videoPlayerController!,
-              aspectRatio: _aspectRatio,
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => VideoPlayBackPage(
+                videoController: _videoPlayerController!,
+                aspectRatio: _aspectRatio,
+              ),
             ),
-          ));
+          );
         });
       }
     });

@@ -60,7 +60,7 @@ class _AccountPageState extends ConsumerState<AccountPage>
                       ),
                     ),
                     const SizedBox(
-                      width: 10.0,
+                      width: 25.0,
                     ),
                     Expanded(
                       flex: 4,

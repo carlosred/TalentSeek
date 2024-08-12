@@ -49,10 +49,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SlideInLeft(
-                  duration: Durations.long4,
-                  child: const Text(
+                  duration: Durations.extralong1,
+                  child: Text(
                     'TalentSeek',
-                    style: Styles.textStyleTittle,
+                    style: Styles.textStyleTittle.copyWith(fontSize: 45.0),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -71,7 +71,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       );
                     } else {
                       return SlideInRight(
-                        duration: Durations.long4,
+                        duration: Durations.extralong1,
                         child: LoginButton(
                           ref: ref,
                           status: LoginStatus.login,

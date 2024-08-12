@@ -16,8 +16,7 @@ class TalentSeekAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: Styles.backgroundGradient,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
         children: [
           Align(
             alignment: Alignment.centerLeft,
@@ -27,9 +26,9 @@ class TalentSeekAppBar extends ConsumerWidget {
                 ref.read(loginPageControllerProvider.notifier).logout();
                 Navigator.of(context).pop();
               },
-              child: const Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: FaIcon(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: const FaIcon(
                   FontAwesomeIcons.arrowRightFromBracket,
                   color: Colors.white,
                 ),
@@ -44,7 +43,7 @@ class TalentSeekAppBar extends ConsumerWidget {
               fit: BoxFit.contain,
             ),
           ),
-          SizedBox()
+          const SizedBox()
         ],
       ),
     );

@@ -36,60 +36,62 @@ class _VideosPageState extends ConsumerState<VideosPage> {
   Widget build(BuildContext context) {
     var videosPageController = ref.watch(videosPageControllerProvider);
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: Container(
-          decoration: Styles.backgroundGradient,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.asset(
-                  'assets/images/icon.png',
-                  width: 40.0,
-                  height: 40.0,
-                  fit: BoxFit.contain,
+    return SafeArea(
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: Container(
+            decoration: Styles.backgroundGradient,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/images/icon.png',
+                    width: 40.0,
+                    height: 40.0,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-      body: SizedBox.expand(
-        child: videosPageController.when(
-          data: (data) {
-            if (data != null) {
-              var videoList = ref.read(videoListProvider);
-              return PageView.builder(
-                onPageChanged: (value) {
-                  ref.read(currentVideoIndex.notifier).state = value;
-                  if (value >= 1 && value < data.length - 1) {
-                    if (data[value + 1]!.value.isInitialized == false) {
-                      data[value + 1]!.initialize();
+        body: SizedBox.expand(
+          child: videosPageController.when(
+            data: (data) {
+              if (data != null) {
+                var videoList = ref.read(videoListProvider);
+                return PageView.builder(
+                  onPageChanged: (value) {
+                    ref.read(currentVideoIndex.notifier).state = value;
+                    if (value >= 1 && value < data.length - 1) {
+                      if (data[value + 1]!.value.isInitialized == false) {
+                        data[value + 1]!.initialize();
+                      }
                     }
-                  }
-                },
-                itemCount: data.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) => VideoReelWidget(
-                  index: index,
-                  video: videoList?[index],
-                  videoPlayerController: data[index],
-                  fromVideosPage: true,
-                ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-          error: (error, stackTrace) => const Center(
-            child: Text('something wrong happens =( '),
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
+                  },
+                  itemCount: data.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) => VideoReelWidget(
+                    index: index,
+                    video: videoList?[index],
+                    videoPlayerController: data[index],
+                    fromVideosPage: true,
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+            error: (error, stackTrace) => const Center(
+              child: Text('something wrong happens =( '),
+            ),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
       ),

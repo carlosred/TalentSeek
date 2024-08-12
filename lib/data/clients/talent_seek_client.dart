@@ -273,6 +273,7 @@ class TalentSeekClient {
           newVideoId: newId,
           videoCreated: result,
           videoRefs: videoRefs,
+          isChallenge: collection == 'challenges',
         );
       }
     } catch (e) {
@@ -285,18 +286,29 @@ class TalentSeekClient {
   Future<void> _updateVideoListOfUserLogged(
       {required String newVideoId,
       required Video videoCreated,
-      required CollectionReference<Object?> videoRefs}) async {
+      required CollectionReference<Object?> videoRefs,
+      required bool isChallenge}) async {
     var userRef = client.collection("users");
     var videoReference = videoCreated.creatorUser as DocumentReference<Object?>;
     var userCreator = await videoReference.get();
     final videoDocumentReference = videoRefs.doc(newVideoId);
     var userCreatorId = userCreator.id;
-    var newVideosList =
-        talentSeek.User.fromJson(userCreator.data() as Map<String, dynamic>)
-            .videos;
-    newVideosList!.add(videoDocumentReference);
 
-    await userRef.doc(userCreatorId).update({'videos': newVideosList});
+    if (isChallenge == false) {
+      var newVideosList =
+          talentSeek.User.fromJson(userCreator.data() as Map<String, dynamic>)
+              .videos;
+      newVideosList!.add(videoDocumentReference);
+
+      await userRef.doc(userCreatorId).update({'videos': newVideosList});
+    } else {
+      var newVideosList =
+          talentSeek.User.fromJson(userCreator.data() as Map<String, dynamic>)
+              .challenges;
+      newVideosList!.add(videoDocumentReference);
+
+      await userRef.doc(userCreatorId).update({'challenges': newVideosList});
+    }
   }
 
   Future<talentSeek.User?> updateUser({

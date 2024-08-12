@@ -83,6 +83,7 @@ class _VideoPlayBackPageState extends ConsumerState<VideoPlayBackPage> {
                     onTap: () {
                       ref.read(recordedVideoProvider.notifier).state = null;
                       Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: const FaIcon(
                       FontAwesomeIcons.x,
