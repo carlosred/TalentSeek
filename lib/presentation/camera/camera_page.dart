@@ -8,6 +8,7 @@ import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/recording_button.dart';
 import 'package:video_player/video_player.dart';
 
+import '../widgets/recording_timer.dart';
 import 'video_playback_page.dart';
 
 class CameraPage extends ConsumerStatefulWidget {
@@ -22,6 +23,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
   late VideoPlayerController? _videoPlayerController;
   File? videoRecorded;
   var _aspectRatio;
+
   @override
   void initState() {
     ref.listenManual(recordedVideoProvider, (previous, next) async {
@@ -73,6 +75,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
+    var isRecording = ref.watch(isRecordingProvider);
     if (!controller.value.isInitialized) {
       return Container();
     }
@@ -111,7 +114,18 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                 alignment: Alignment.bottomCenter,
                 child: RecordingButton(),
               ),
-            )
+            ),
+            isRecording
+                ? const Padding(
+                    padding: EdgeInsets.only(
+                      top: 50.0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: RecordingTimer(),
+                    ),
+                  )
+                : const SizedBox()
           ],
         ),
       ),

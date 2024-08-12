@@ -6,12 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
+import 'package:talent_seek/presentation/controllers/videos/videos_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/challenge_item.dart';
 import 'package:talent_seek/presentation/widgets/expandable_video_info.dart';
 import 'package:talent_seek/utils/styles.dart';
 
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../domain/video/video.dart';
 import 'placeholders.dart';
@@ -19,6 +21,7 @@ import 'placeholders.dart';
 class VideoReelWidget extends ConsumerStatefulWidget {
   const VideoReelWidget({
     required this.index,
+    required this.fromVideosPage,
     required this.video,
     required this.videoPlayerController,
     super.key,
@@ -27,6 +30,7 @@ class VideoReelWidget extends ConsumerStatefulWidget {
   final VideoPlayerController? videoPlayerController;
   final int index;
   final Video? video;
+  final bool fromVideosPage;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -34,37 +38,15 @@ class VideoReelWidget extends ConsumerStatefulWidget {
 }
 
 class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   int videoPosition = 0;
   var _progress = 0.0;
   int totalVideoDurationInSeconds = 0;
   late VideoPlayerController _videoPlayerController;
-  late AnimationController _controller;
+  AnimationController? _controller;
   late Animation<double> _animation;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      widget.videoPlayerController!.addListener(() async {
-        if (_videoPlayerController.value.isCompleted) {
-          setState(() {
-            _videoPlayerController.seekTo(Duration.zero);
-            _videoPlayerController.play();
-            _controller.duration = Duration(
-              seconds: totalVideoDurationInSeconds,
-            );
-            _animation = Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              parent: _controller,
-              curve: Curves.easeInOut,
-            ));
-            _controller.reset();
-            _controller.forward();
-          });
-        }
-      });
-    });
     if (_isControllerDisposed() == true) {
       _videoPlayerController = VideoPlayerController.networkUrl(
         Uri.parse(widget.video!.videoUrl ?? ''),
@@ -73,87 +55,79 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
 
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _videoPlayerController.addListener(() async {
-          if (_videoPlayerController.value.isInitialized == true) {
-            totalVideoDurationInSeconds =
-                _videoPlayerController.value.duration.inSeconds;
-            _controller = AnimationController(
-              vsync: this,
-              duration: Duration(
-                seconds: totalVideoDurationInSeconds,
-              ),
-            );
-            _animation = Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              parent: _controller,
-              curve: Curves.easeInOut,
-            ));
-
-            _animation.addListener(() {
-              if (mounted) {
-                setState(() {
-                  _progress = _animation.value;
-                });
-              }
-            });
-            _videoPlayerController.play();
-
-            _controller.forward();
+          if (_videoPlayerController.value.isInitialized == true &&
+              _controller == null) {
+            _startVideoAndAnimation();
             setState(() {});
           }
 
           if (_videoPlayerController.value.isCompleted) {
-            setState(() {
-              _videoPlayerController.seekTo(Duration.zero);
-              _videoPlayerController.play();
-              _controller.duration = Duration(
-                seconds: totalVideoDurationInSeconds,
-              );
-              _animation = Tween<double>(
-                begin: 0.0,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: _controller,
-                curve: Curves.easeInOut,
-              ));
-              _controller.reset();
-              _controller.forward();
-            });
+            _restartVideoAndAnimation();
           }
         });
       });
     } else {
       _videoPlayerController = widget.videoPlayerController!;
-      totalVideoDurationInSeconds =
-          _videoPlayerController.value.duration.inSeconds;
-      _controller = AnimationController(
-        vsync: this,
-        duration: Duration(
-          seconds: totalVideoDurationInSeconds,
-        ),
+      _startVideoAndAnimation();
+
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _videoPlayerController.addListener(() async {
+          if (_videoPlayerController.value.isCompleted) {
+            _restartVideoAndAnimation();
+          }
+        });
+      });
+    }
+
+    super.initState();
+  }
+
+  _restartVideoAndAnimation() {
+    setState(() {
+      _videoPlayerController.seekTo(Duration.zero);
+      _videoPlayerController.play();
+      _controller!.duration = Duration(
+        seconds: totalVideoDurationInSeconds,
       );
       _animation = Tween<double>(
         begin: 0.0,
         end: 1.0,
       ).animate(CurvedAnimation(
-        parent: _controller,
+        parent: _controller!,
         curve: Curves.easeInOut,
       ));
+      _controller!.reset();
+      _controller!.forward();
+    });
+  }
 
-      _animation.addListener(() {
-        if (mounted) {
-          setState(() {
-            _progress = _animation.value;
-          });
-        }
-      });
-      _videoPlayerController.play();
+  _startVideoAndAnimation() {
+    totalVideoDurationInSeconds =
+        _videoPlayerController.value.duration.inSeconds;
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        seconds: totalVideoDurationInSeconds,
+      ),
+    );
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller!,
+      curve: Curves.easeInOut,
+    ));
 
-      _controller.forward();
-    }
+    _animation.addListener(() {
+      if (mounted) {
+        setState(() {
+          _progress = _animation.value;
+        });
+      }
+    });
+    _videoPlayerController.play();
 
-    super.initState();
+    _controller!.forward();
   }
 
   void _updatePositionOfVideo({
@@ -177,12 +151,12 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
         _progress = 1.0;
         _videoPlayerController
             .seekTo(Duration(seconds: totalVideoDurationInSeconds));
-        _controller.reset();
-        _controller.forward();
+        _controller!.reset();
+        _controller!.forward();
       });
     } else {
       setState(() {
-        _controller.duration = Duration(
+        _controller!.duration = Duration(
           seconds: totalVideoDurationInSeconds - videoPosition,
         );
         _videoPlayerController.seekTo(Duration(seconds: videoPosition));
@@ -192,19 +166,21 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
           end: 1.0,
         ).animate(
           CurvedAnimation(
-            parent: _controller,
+            parent: _controller!,
             curve: Curves.linear,
           ),
         );
 
-        _controller.reset();
-        _controller.forward();
+        _controller!.reset();
+        _controller!.forward();
       });
     }
   }
 
   bool _isControllerDisposed() {
-    var videoControllerList = ref.read(discoverPageControllerProvider);
+    var videoControllerList = (widget.fromVideosPage == true)
+        ? ref.read(videosPageControllerProvider)
+        : ref.read(discoverPageControllerProvider);
     return videoControllerList.value![widget.index] == null;
   }
 
@@ -233,8 +209,8 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
     _videoPlayerController.pause();
     _videoPlayerController.seekTo(Duration.zero);
     _videoPlayerController.dispose();
-    _controller.reset();
-    _controller.dispose();
+    _controller!.reset();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -243,9 +219,13 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
     Size size = MediaQuery.of(context).size;
 
     ref.listen(currentVideoIndex, (previous, next) {
-      ref
-          .read(discoverPageControllerProvider.notifier)
-          .deleteVideoControllerDisposed(index: previous!);
+      (widget.fromVideosPage == true)
+          ? ref
+              .read(videosPageControllerProvider.notifier)
+              .deleteVideoControllerDisposed(index: previous!)
+          : ref
+              .read(discoverPageControllerProvider.notifier)
+              .deleteVideoControllerDisposed(index: previous!);
     });
     return (_videoPlayerController.value.isInitialized)
         ? Scaffold(
@@ -257,10 +237,10 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
                   onTap: () {
                     if (_videoPlayerController.value.isPlaying) {
                       _videoPlayerController.pause();
-                      _controller.stop();
+                      _controller!.stop();
                     } else {
                       _videoPlayerController.play();
-                      _controller.forward();
+                      _controller!.forward();
                     }
                   },
                   child: SizedBox.expand(
@@ -327,8 +307,11 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
                   bottom: 50.0,
                   left: 5.0,
                   right: 5.0,
-                  child: ExpandableVideoInfo(
-                    videoInfo: widget.video,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ExpandableVideoInfo(
+                      videoInfo: widget.video,
+                    ),
                   ),
                 ),
                 if (widget.video?.roleSeeked != null &&

@@ -3,21 +3,23 @@ import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:video_player/video_player.dart';
 
-part 'discover_page_controller.g.dart';
+import '../../../domain/video/video.dart';
 
-class DiscoverPageController extends _$DiscoverPageController {
+part 'videos_page_controller.g.dart';
+
+class VideosPageController extends _$VideosPageController {
   late List<VideoPlayerController?>? _videoControllers;
   @override
   Future<List<VideoPlayerController?>?> build() async {
     return null;
   }
 
-  Future<void> getVideos() async {
+  Future<void> getVideoControllers({required List<Video> videos}) async {
     state = const AsyncLoading();
     try {
-      var videoList = await ref.read(videoRepositoryProvider).getVideos();
+      var videoList = videos;
       _videoControllers = List.generate(
-        videoList!.length,
+        videoList.length,
         (index) => VideoPlayerController.networkUrl(
           Uri.parse(videoList[index].videoUrl ?? ''),
         ),
@@ -27,7 +29,7 @@ class DiscoverPageController extends _$DiscoverPageController {
       await initializeCurrentVideoController(
         currentIndexVideoController: firstVideoIndex,
       );
-      ref.read(videoListProvider.notifier).state = videoList;
+
       state = AsyncData(_videoControllers);
     } catch (error, stack) {
       state = AsyncError(error, stack);
@@ -52,12 +54,5 @@ class DiscoverPageController extends _$DiscoverPageController {
     currentVideoControllerList![index] = null;
 
     state = AsyncData(currentVideoControllerList);
-  }
-
-  disposeVideoControllers() {
-    for (var controller in _videoControllers!) {
-      controller!.dispose();
-    }
-    _videoControllers!.clear();
   }
 }

@@ -21,4 +21,8 @@ class LoginPageController extends _$LoginPageController {
       state = AsyncError(error, stack);
     }
   }
+
+  logout() {
+    state = const AsyncData(null);
+  }
 }

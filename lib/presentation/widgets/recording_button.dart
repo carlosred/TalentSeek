@@ -18,7 +18,6 @@ class RecordingButton extends ConsumerStatefulWidget {
 
 class _RecordingButtonState extends ConsumerState<RecordingButton> {
   CameraTalentSeekController? cameraController;
-  bool isRecording = false;
 
   @override
   void initState() {
@@ -30,10 +29,11 @@ class _RecordingButtonState extends ConsumerState<RecordingButton> {
     if (cameraController!.getCameraController.value.isInitialized &&
         cameraController!.getCameraController.value.isRecordingVideo == false) {
       await cameraController!.startRecording();
-      isRecording = true;
+
+      ref.read(isRecordingProvider.notifier).state = true;
     } else if (cameraController!.getCameraController.value.isInitialized &&
         cameraController!.getCameraController.value.isRecordingVideo == true) {
-      isRecording = false;
+      ref.read(isRecordingProvider.notifier).state = false;
       await cameraController!.stopVideoRecording();
 
       ref.read(recordedVideoProvider.notifier).state =
@@ -44,6 +44,7 @@ class _RecordingButtonState extends ConsumerState<RecordingButton> {
 
   @override
   Widget build(BuildContext context) {
+    var isRecording = ref.watch(isRecordingProvider);
     return GestureDetector(
       onTap: _toggleRecording,
       child: AnimatedSwitcher(

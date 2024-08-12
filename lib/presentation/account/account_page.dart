@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:talent_seek/presentation/videos/videos_page.dart';
 import 'package:talent_seek/presentation/widgets/create_pitch_dialog.dart';
 import 'package:talent_seek/presentation/widgets/update_name_user_dialog.dart';
 import 'package:talent_seek/utils/styles.dart';
 
+import '../../domain/video/video.dart';
 import '../widgets/add_pitch_button.dart';
 import '../widgets/circular_account_avatar.dart';
 
@@ -20,11 +22,6 @@ class AccountPage extends ConsumerStatefulWidget {
 
 class _AccountPageState extends ConsumerState<AccountPage>
     with AutomaticKeepAliveClientMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -225,7 +222,7 @@ class _AccountPageState extends ConsumerState<AccountPage>
       // Calculate the total height of the GridView
       double gridHeight = rowCount * itemHeight +
           (rowCount - 1) * 8.0; // Adding spacing between rows
-
+      var videoList = videos as List<Video>;
       return SizedBox(
         height: gridHeight,
         child: GridView.builder(
@@ -236,11 +233,15 @@ class _AccountPageState extends ConsumerState<AccountPage>
             mainAxisSpacing: 2.0,
             childAspectRatio: aspectRatio,
           ),
-          itemCount: videos.length,
+          itemCount: videoList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                // Navigator.of(context).push(route)
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => VideosPage(
+                    videos: videoList,
+                  ),
+                ));
               },
               child: Container(
                 decoration: const BoxDecoration(

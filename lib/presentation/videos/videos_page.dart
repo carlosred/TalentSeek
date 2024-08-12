@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
+import 'package:talent_seek/presentation/controllers/videos/videos_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/video_reel.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
-class DiscoverPage extends ConsumerStatefulWidget {
-  const DiscoverPage({super.key});
+import '../../domain/video/video.dart';
+import '../../utils/styles.dart';
+import '../widgets/appbar.dart';
+
+class VideosPage extends ConsumerStatefulWidget {
+  const VideosPage({
+    super.key,
+    required this.videos,
+  });
+
+  final List<Video> videos;
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DiscoverPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _VideosPageState();
 }
 
-class _DiscoverPageState extends ConsumerState<DiscoverPage> {
+class _VideosPageState extends ConsumerState<VideosPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(discoverPageControllerProvider.notifier).getVideos();
+      ref
+          .read(videosPageControllerProvider.notifier)
+          .getVideoControllers(videos: widget.videos);
     });
 
     super.initState();
@@ -23,21 +34,30 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
-    var discoverPageController = ref.watch(discoverPageControllerProvider);
+    var videosPageController = ref.watch(videosPageControllerProvider);
 
-    ref.listen(tabIndexProvider, (previous, next) {
-      if (next == 0) {
-        ref.read(discoverPageControllerProvider.notifier).getVideos();
-      }
-      if (next == 1) {
-        ref
-            .read(discoverPageControllerProvider.notifier)
-            .disposeVideoControllers();
-      }
-    });
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: Container(
+          decoration: Styles.backgroundGradient,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/icon.png',
+                  width: 40.0,
+                  height: 40.0,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SizedBox.expand(
-        child: discoverPageController.when(
+        child: videosPageController.when(
           data: (data) {
             if (data != null) {
               var videoList = ref.read(videoListProvider);
@@ -45,8 +65,7 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                 onPageChanged: (value) {
                   ref.read(currentVideoIndex.notifier).state = value;
                   if (value >= 1 && value < data.length - 1) {
-                    if (data[value + 1] != null &&
-                        data[value + 1]?.value.isInitialized == false) {
+                    if (data[value + 1]!.value.isInitialized == false) {
                       data[value + 1]!.initialize();
                     }
                   }
@@ -57,7 +76,7 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                   index: index,
                   video: videoList?[index],
                   videoPlayerController: data[index],
-                  fromVideosPage: false,
+                  fromVideosPage: true,
                 ),
               );
             } else {
