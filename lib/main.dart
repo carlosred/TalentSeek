@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talent_seek/presentation/login/login_page.dart';
+
+import 'package:talent_seek/core/navigation/routes_generator.dart';
+
+import 'core/navigation/routes.dart';
 import 'firebase_options.dart';
-import 'presentation/account/account_page.dart';
-import 'presentation/home/home_page.dart';
+import 'utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,12 +34,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TalentSeek',
+      title: Constants.talentSeek,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      initialRoute: Routes.loginRoute,
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }

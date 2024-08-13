@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:talent_seek/domain/user/user.dart';
 
 part 'video.g.dart';
 

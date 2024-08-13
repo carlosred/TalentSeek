@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:talent_seek/data/providers/data_providers.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:talent_seek/presentation/videos/videos_page.dart';
-import 'package:talent_seek/presentation/widgets/create_pitch_dialog.dart';
 import 'package:talent_seek/presentation/widgets/update_name_user_dialog.dart';
 import 'package:talent_seek/utils/styles.dart';
 

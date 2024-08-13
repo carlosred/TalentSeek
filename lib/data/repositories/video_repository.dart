@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:talent_seek/data/clients/talent_seek_client.dart';
-import 'package:talent_seek/domain/user/user.dart';
 import 'package:talent_seek/domain/video/video.dart';
 
 class VideoRepository {

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
 import 'package:talent_seek/presentation/controllers/videos/videos_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/video_reel.dart';
 
 import '../../domain/video/video.dart';
 import '../../utils/styles.dart';
-import '../widgets/appbar.dart';
 
 class VideosPage extends ConsumerStatefulWidget {
   const VideosPage({
@@ -33,13 +31,19 @@ class _VideosPageState extends ConsumerState<VideosPage> {
   }
 
   @override
+  void dispose() {
+    ref.read(videosPageControllerProvider.notifier).disposeVideoControllers();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var videosPageController = ref.watch(videosPageControllerProvider);
 
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50),
+          preferredSize: const Size.fromHeight(50),
           child: Container(
             decoration: Styles.backgroundGradient,
             child: Row(

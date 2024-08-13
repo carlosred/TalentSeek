@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talent_seek/presentation/widgets/create_pitch_dialog.dart';
+import 'package:talent_seek/utils/constants.dart';
 
 import '../../utils/styles.dart';
 
@@ -36,7 +37,7 @@ class AddPitchButton extends StatelessWidget {
             ),
             SizedBox(width: 8),
             Text(
-              'Crea un Pitch',
+              Constants.createPitchText,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,

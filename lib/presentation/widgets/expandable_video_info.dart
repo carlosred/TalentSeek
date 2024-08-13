@@ -1,12 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:talent_seek/domain/user/user.dart';
 
 import '../../domain/video/video.dart';
+import '../../utils/constants.dart';
 
 class ExpandableVideoInfo extends StatefulWidget {
   final Video? videoInfo;
@@ -80,7 +79,7 @@ class _ExpandableVideoInfoState extends State<ExpandableVideoInfo>
                             if (widget.videoInfo?.roleSeeked != null &&
                                 widget.videoInfo!.roleSeeked!.isNotEmpty)
                               AutoSizeText(
-                                'Objetivo - ${widget.videoInfo!.objectChallenge!}',
+                                '${Constants.objective} - ${widget.videoInfo!.objectChallenge!}',
                                 wrapWords: true,
                                 maxLines: 1,
                                 style: const TextStyle(

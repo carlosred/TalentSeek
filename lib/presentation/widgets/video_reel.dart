@@ -1,19 +1,17 @@
 // ignore_for_file: invalid_use_of_protected_member
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+
 import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
 import 'package:talent_seek/presentation/controllers/videos/videos_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/challenge_item.dart';
 import 'package:talent_seek/presentation/widgets/expandable_video_info.dart';
 import 'package:talent_seek/utils/styles.dart';
-
-import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../domain/video/video.dart';
 import 'placeholders.dart';
@@ -68,15 +66,34 @@ class _VideoReelWidgetState extends ConsumerState<VideoReelWidget>
       });
     } else {
       _videoPlayerController = widget.videoPlayerController!;
-      _startVideoAndAnimation();
 
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _videoPlayerController.addListener(() async {
-          if (_videoPlayerController.value.isCompleted) {
-            _restartVideoAndAnimation();
-          }
+      if (_videoPlayerController.value.isInitialized == true) {
+        _startVideoAndAnimation();
+
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _videoPlayerController.addListener(() async {
+            if (_videoPlayerController.value.isCompleted) {
+              _restartVideoAndAnimation();
+            }
+          });
         });
-      });
+      } else {
+        _videoPlayerController.initialize();
+
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _videoPlayerController.addListener(() async {
+            if (_videoPlayerController.value.isInitialized == true &&
+                _controller == null) {
+              _startVideoAndAnimation();
+              setState(() {});
+            }
+
+            if (_videoPlayerController.value.isCompleted) {
+              _restartVideoAndAnimation();
+            }
+          });
+        });
+      }
     }
 
     super.initState();

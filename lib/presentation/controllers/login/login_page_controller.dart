@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:talent_seek/domain/user/user.dart' as talentSeek;

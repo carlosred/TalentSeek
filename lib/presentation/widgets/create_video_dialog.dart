@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/data/providers/data_providers.dart';
-import 'package:talent_seek/presentation/camera/camera_page.dart';
 
 import 'package:talent_seek/utils/styles.dart';
 
+import '../../core/navigation/routes.dart';
 import '../../domain/video/video.dart';
+import '../../utils/constants.dart';
 import '../providers/presentation_providers.dart';
 
 class CreateVideoDialog extends ConsumerStatefulWidget {
@@ -61,7 +62,7 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
                 children: [
                   const SizedBox(height: 10.0),
                   const Text(
-                    'Crea tu Pitch',
+                    Constants.createPitchText,
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -74,7 +75,7 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
                     },
                     controller: tittleController,
                     decoration: const InputDecoration(
-                      labelText: 'Título',
+                      labelText: Constants.title,
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -86,7 +87,7 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
                       },
                       controller: objectiveController,
                       decoration: const InputDecoration(
-                        labelText: 'Objetivo',
+                        labelText: Constants.objective,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -97,7 +98,7 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
                       },
                       controller: roolSeekedController,
                       decoration: const InputDecoration(
-                        labelText: 'Rol a buscar',
+                        labelText: Constants.roleSeeked,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -109,7 +110,7 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
                     },
                     controller: descriptionController,
                     decoration: const InputDecoration(
-                      labelText: 'Descripción',
+                      labelText: Constants.description,
                       border: OutlineInputBorder(),
                     ),
                     maxLines: 3,
@@ -141,10 +142,8 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
 
                               // ignore: use_build_context_synchronously
 
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const CameraPage(),
-                                ),
+                              Navigator.of(context).pushNamed(
+                                Routes.cameraRoute,
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -157,7 +156,7 @@ class _CreateVideoDialogState extends ConsumerState<CreateVideoDialog> {
                               padding: EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 30.0),
                               child: Text(
-                                'Iniciar a grabar',
+                                Constants.startRecording,
                                 style: TextStyle(fontSize: 16.0),
                               ),
                             ),

@@ -1,10 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/data/clients/talent_seek_client.dart';
 import 'package:talent_seek/domain/user/user.dart';
-
-import '../../domain/video/video.dart';
 
 class UserRepository {
   final TalentSeekClient talentSeekClient;

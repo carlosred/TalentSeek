@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talent_seek/presentation/controllers/discover/discover_page_controller.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/video_reel.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class DiscoverPage extends ConsumerStatefulWidget {
   const DiscoverPage({super.key});

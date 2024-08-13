@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,9 +25,9 @@ class TalentSeekAppBar extends ConsumerWidget {
                 ref.read(loginPageControllerProvider.notifier).logout();
                 Navigator.of(context).pop();
               },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: const FaIcon(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: FaIcon(
                   FontAwesomeIcons.arrowRightFromBracket,
                   color: Colors.white,
                 ),

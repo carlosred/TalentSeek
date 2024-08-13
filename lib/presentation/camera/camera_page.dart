@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:video_player/video_player.dart';
+
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/presentation/widgets/recording_button.dart';
-import 'package:video_player/video_player.dart';
 
 import '../widgets/recording_timer.dart';
 import 'video_playback_page.dart';

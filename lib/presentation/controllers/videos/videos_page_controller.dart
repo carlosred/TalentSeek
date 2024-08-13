@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talent_seek/data/providers/data_providers.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:video_player/video_player.dart';
 
@@ -54,5 +53,14 @@ class VideosPageController extends _$VideosPageController {
     currentVideoControllerList![index] = null;
 
     state = AsyncData(currentVideoControllerList);
+  }
+
+  disposeVideoControllers() {
+    for (var controller in _videoControllers!) {
+      controller!.dispose();
+    }
+    _videoControllers!.clear();
+
+    state = AsyncData(_videoControllers);
   }
 }

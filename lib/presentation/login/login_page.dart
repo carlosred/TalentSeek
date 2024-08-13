@@ -1,7 +1,8 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talent_seek/presentation/discover/discover_page.dart';
-import 'package:talent_seek/presentation/home/home_page.dart';
+
+import 'package:talent_seek/core/navigation/routes.dart';
 import 'package:talent_seek/presentation/providers/presentation_providers.dart';
 import 'package:talent_seek/utils/styles.dart';
 
@@ -9,7 +10,6 @@ import '../../utils/constants.dart';
 import '../../utils/enum.dart';
 import '../controllers/login/login_page_controller.dart';
 import '../widgets/login_button.dart';
-import 'package:animate_do/animate_do.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -24,9 +24,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.read(cameraControllerProvider).initializeCameras();
     ref.listenManual(loginPageControllerProvider, (previous, next) {
       if (next.hasValue && next.value != null) {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ));
+        Navigator.of(context).pushNamed(Routes.homeRoute);
       }
     });
     super.initState();
@@ -49,9 +47,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SlideInLeft(
-                  duration: Durations.extralong1,
+                  duration: Durations.extralong3,
                   child: Text(
-                    'TalentSeek',
+                    Constants.talentSeek,
                     style: Styles.textStyleTittle.copyWith(fontSize: 45.0),
                     textAlign: TextAlign.center,
                   ),
@@ -71,7 +69,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       );
                     } else {
                       return SlideInRight(
-                        duration: Durations.extralong1,
+                        duration: Durations.extralong3,
                         child: LoginButton(
                           ref: ref,
                           status: LoginStatus.login,

@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:talent_seek/presentation/widgets/create_video_dialog.dart';
 import 'package:talent_seek/utils/styles.dart';
 
+import '../../utils/constants.dart';
+
 class CreatePitchDialog extends StatelessWidget {
   const CreatePitchDialog({super.key});
 
@@ -33,7 +35,7 @@ class CreatePitchDialog extends StatelessWidget {
                     const SizedBox(
                       height: 10.0,
                     ),
-                    const Text('Elige el tipo de Pitch que quieres crear!'),
+                    const Text(Constants.chooseTypePitchText),
                     const SizedBox(
                       height: 40.0,
                     ),
@@ -43,14 +45,14 @@ class CreatePitchDialog extends StatelessWidget {
                         buildOptionCard(
                           context,
                           icon: FontAwesomeIcons.video,
-                          label: 'Crear Video',
+                          label: Constants.createVideo,
                           isChallenge: false,
                         ),
                         const SizedBox(width: 10),
                         buildOptionCard(
                           context,
                           icon: FontAwesomeIcons.flag,
-                          label: 'Crear Challenge',
+                          label: Constants.createChallenge,
                           isChallenge: true,
                         ),
                       ],

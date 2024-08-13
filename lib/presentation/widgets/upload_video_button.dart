@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../utils/constants.dart';
 import '../../utils/enum.dart';
 import '../../utils/styles.dart';
 
@@ -36,7 +37,7 @@ class _UploadVideoButtonState extends State<UploadVideoButton> {
             width: 10.0,
           ),
           Text(
-            'Video subido exitosamente!',
+            Constants.uploadSuccess,
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -73,13 +74,15 @@ class _UploadVideoButtonState extends State<UploadVideoButton> {
             width: 10.0,
           ),
           Text(
-            'Subir video',
+            Constants.uploadVideo,
             style: Styles.textStyleTittle2,
           )
         ];
         break;
       default:
-        result = const [Text('Subir video', style: Styles.textStyleTittle)];
+        result = const [
+          Text(Constants.uploadVideo, style: Styles.textStyleTittle)
+        ];
     }
 
     return result;
