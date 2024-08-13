@@ -34,8 +34,10 @@ class _VideoPlayBackPageState extends ConsumerState<VideoPlayBackPage> {
       if (next.hasValue && next.value != null) {
         ref.read(accountPageControllerProvider.notifier).getUserUpdated();
 
-        Navigator.of(context)
-            .popUntil((route) => route.settings.name == Routes.homeRoute);
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
       }
     });
     super.initState();
