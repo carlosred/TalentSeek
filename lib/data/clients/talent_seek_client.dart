@@ -221,7 +221,8 @@ class TalentSeekClient {
 
       var userDocument = userquery.docs.firstOrNull;
 
-      result = talentSeek.User.fromJson(userDocument!.data());
+      var userLogged = talentSeek.User.fromJson(userDocument!.data());
+      result = await _getVideosFromUserLogged(userLogged: userLogged);
     } catch (e) {
       result = null;
     }
