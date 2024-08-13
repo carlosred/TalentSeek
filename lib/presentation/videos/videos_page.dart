@@ -90,8 +90,8 @@ class _VideosPageState extends ConsumerState<VideosPage> {
                 );
               }
             },
-            error: (error, stackTrace) => const Center(
-              child: Text('something wrong happens =( '),
+            error: (error, stackTrace) => Center(
+              child: Text('something wrong happens =( $error'),
             ),
             loading: () => const Center(
               child: CircularProgressIndicator(),
